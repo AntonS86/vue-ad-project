@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
-import * as firebase from 'firebase';
+import * as fb from 'firebase/app';
 
 Vue.config.productionTip = false
 
@@ -23,6 +23,6 @@ new Vue({
       appId: '1:382054686261:web:606b426d7ae482d4f45b7c'
     };
 
-    firebase.initializeApp(firebaseConfig);
+    fb.initializeApp(firebaseConfig);
   }
 }).$mount('#app')
