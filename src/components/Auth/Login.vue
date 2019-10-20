@@ -50,7 +50,8 @@
                         <v-btn
                                 color="primary"
                                 @click="onSubmit()"
-                                :disabled="!valid"
+                                :disabled="!valid || loading"
+                                :loading="loading"
                         >Login
                         </v-btn>
                     </v-card-actions>
@@ -75,17 +76,28 @@
                     v => !!v || 'Password is required',
                     v => (v && v.length >= 6) || 'Password must be equal or more than 6 characters',
                 ],
-                result: ''
             }
+        },
+        computed: {
+          loading() {
+            return this.$store.getters.loading;
+          }
         },
         methods: {
             onSubmit() {
 
                 if (this.$refs.form.validate()) {
-                     this.result = {
+                    const user = {
                         email: this.email,
                         password: this.password,
                     };
+
+                    this.$store.dispatch('loginUser', user)
+                      .then(() => {
+                        this.$router.push('/');
+                      })
+                      .catch(error => alert(error))
+
                 }
 
             }
