@@ -46,12 +46,29 @@
         <v-content>
 
             <!-- Provides the application the proper gutter -->
-            <v-container fluid>
+        <v-container fluid>
                 <!-- If using vue-router -->
-                <router-view></router-view>
-            </v-container>
-        </v-content>
-
+          <router-view></router-view>
+        </v-container>
+        <template v-if="error">
+         <v-snackbar
+                    :multi-line="true"
+                    :timeout="5000"
+                    color="error"
+                    @input="closeError"
+                    :value="true"
+            >
+            {{error}}
+            <v-btn
+              dark
+              text
+             @click="closeError"
+             >
+             Close
+             </v-btn>
+          </v-snackbar>
+        </template>
+      </v-content>
     </v-app>
 </template>
 
@@ -68,7 +85,17 @@
                   {title: 'My ads', icon: 'format-list-bulleted', url: '/list'},
                 ]
             }
+        },
+      methods: {
+        closeError() {
+          this.$store.dispatch('clearError');
         }
+      },
+      computed: {
+        error() {
+          return this.$store.getters.error;
+        }
+      }
     }
 </script>
 
