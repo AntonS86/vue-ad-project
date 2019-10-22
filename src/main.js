@@ -17,7 +17,7 @@ new Vue({
     const firebaseConfig = {
       apiKey:'AIzaSyC63X37miRifnB91-dp7hBgYnlhf-hlN18',
       authDomain: 'ad-product-92fe8.firebaseapp.com',
-      databaseURL: 'https:ad-product-92fe8.firebaseio.com',
+      databaseURL: 'ad-product-92fe8.firebaseio.com',
       projectId: 'ad-product-92fe8',
       storageBucket: 'ad-product-92fe8.appspot.com',
       messagingSenderId: '382054686261',

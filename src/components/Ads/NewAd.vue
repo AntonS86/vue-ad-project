@@ -55,12 +55,12 @@
                                <v-btn
                                        class="success"
                                        @click="createAd"
-                                       :disabled="!valid"
+                                       :disabled="!valid || loading"
+                                       :loading="loading"
                                >Create Ad</v-btn>
                             </v-flex>
                         </v-layout>
                     </v-flex>
-                    <pre>{{result}}</pre>
                 </v-layout>
             </v-flex>
         </v-layout>
@@ -78,6 +78,11 @@
                 result: null,
             }
         },
+        computed: {
+          loading() {
+            return this.$store.getters.loading;
+          }
+        },
         methods: {
             createAd() {
                 if (this.$refs.form.validate()) {
@@ -88,9 +93,11 @@
                         promo: this.promo,
                         imageSrc:"https://miro.medium.com/max/900/1*OrjCKmou1jT4It5so5gvOA.jpeg",
                     }
-                    this.result = ad;
-
-                    this.$store.dispatch('createAd', ad);
+                    this.$store.dispatch('createAd', ad)
+                      .then(() => {
+                        this.$router.push('/');
+                      })
+                      .catch(() => {});
                 }
             }
         }

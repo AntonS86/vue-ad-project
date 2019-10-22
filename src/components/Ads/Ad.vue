@@ -28,7 +28,7 @@
       props: ['id'],
       computed: {
         ad() {
-          const id = Number(this.id);
+          const id = this.id;
           return this.$store.getters.adById(id);
         }
       }
