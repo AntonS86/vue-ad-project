@@ -31,13 +31,21 @@
                     <v-flex xs12>
                         <v-btn
                                 class="warning"
+                                @click="triggerUpload"
                         >
                             Upload
                             <v-icon right dark>mdi-cloud-upload</v-icon>
                         </v-btn>
+                        <input 
+                          ref="fileInput" 
+                          type="file" 
+                          style="display: none;" 
+                          accept="image/*"
+                          @change="onFileChange"
+                        >
                         <v-layout row>
                             <v-flex xs12>
-                                <img src="" height="100">
+                                <img :src="imageSrc" height="100" v-if="imageSrc">
                             </v-flex>
                         </v-layout>
                         <v-layout row>
@@ -55,7 +63,7 @@
                                <v-btn
                                        class="success"
                                        @click="createAd"
-                                       :disabled="!valid || loading"
+                                       :disabled="!valid || !image || loading"
                                        :loading="loading"
                                >Create Ad</v-btn>
                             </v-flex>
@@ -75,7 +83,8 @@
                 description: '',
                 promo: false,
                 valid: false,
-                result: null,
+                image: null,
+                imageSrc: '', 
             }
         },
         computed: {
@@ -85,21 +94,36 @@
         },
         methods: {
             createAd() {
-                if (this.$refs.form.validate()) {
+                if (this.$refs.form.validate() && this.image) {
                     //
                     const ad = {
                         title: this.title,
                         description: this.description,
                         promo: this.promo,
-                        imageSrc:"https://miro.medium.com/max/900/1*OrjCKmou1jT4It5so5gvOA.jpeg",
+                        image: this.image,
                     }
+
                     this.$store.dispatch('createAd', ad)
                       .then(() => {
                         this.$router.push('/');
                       })
                       .catch(() => {});
                 }
+            },
+
+          triggerUpload() {
+              this.$refs.fileInput.click();
+          },
+
+          onFileChange(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = () => {
+              this.imageSrc = reader.result;
             }
+            reader.readAsDataURL(file);
+            this.image = file;
+          }
         }
     }
 </script>
