@@ -23,9 +23,18 @@ export default {
     createAd(state, payload) {
       state.ads.push(payload);
     },
+
     loadAds(state, payload) {
       state.ads = payload;
+    },
+
+    updateAd(state, {title, description, id}) {
+      const ad = state.ads.find(a => a.id === id);
+
+      ad.title = title;
+      ad.description = description;
     }
+
   },
   actions: {
     async createAd({commit, getters}, payload) {
@@ -42,7 +51,7 @@ export default {
         const fileData = await fb.storage().ref(`ads/${ad.key}.${imageExt}`).put(image);
         const imageSrc = await fileData.ref.getDownloadURL();
         await fb.database().ref('ads').child(ad.key).update({
-          imageSrc 
+          imageSrc
         })
 
         commit('createAd', {
@@ -76,6 +85,23 @@ export default {
         commit('setError', error.message);
         commit('setLoading', false);
       }
+    },
+
+    async updateAd({ commit }, { title, description, id }) {
+      commit('clearError');
+      commit('setLoading', true);
+      try {
+        await fb.database().ref('ads').child(id).update({
+          title, description
+        });
+
+        commit('updateAd', {title, description, id});
+        commit('setLoading', false);
+      } catch(error) {
+        commit('setError', error.message);
+        commit('setLoading', false);
+        throw error;
+      }
     }
   },
   getters: {
@@ -87,8 +113,8 @@ export default {
         return ad.promo;
       })
     },
-    myAds(state) {
-      return state.ads;
+    myAds(state, getters) {
+      return state.ads.filter(ad => ad.ownerId === getters.user.id);
     },
     adById(state) {
       return (adId) => {
