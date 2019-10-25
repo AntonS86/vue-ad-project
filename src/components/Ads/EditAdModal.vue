@@ -72,7 +72,7 @@ export default {
           description: this.editedDescription,
           id: this.ad.id,
         })
-        this.modal === false;
+        this.modal = false;
       }
     }
   }
